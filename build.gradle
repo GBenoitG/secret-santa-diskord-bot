@@ -19,6 +19,16 @@ dependencies {
 
 //    JDA (Java Discord API)
     implementation "net.dv8tion:JDA:4.2.0_206"
+
+//    Test
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    testImplementation "io.mockk:mockk:1.10.2"
+}
+
+test {
+    useJUnitPlatform()
 }
 
 compileKotlin {
