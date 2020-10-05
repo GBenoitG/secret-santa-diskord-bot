@@ -10,7 +10,7 @@ object Commands {
         /**
          * Help command display a list of help
          * */
-        COMMAND(CommandContent::class, "command");
+        INVITATION(CommandContent::class, "invitation");
 
         fun getFullCommand(): String {
             return "${Constant.PREFIX}${this.value}"
