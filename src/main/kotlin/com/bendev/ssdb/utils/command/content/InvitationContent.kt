@@ -24,4 +24,6 @@ class InvitationContent(rawContent: String) : CommandContent(rawContent) {
 
     }
 
+    override fun isWellFormatted(): Boolean = description.isNotBlank() && reactions.size == 3
+    
 }

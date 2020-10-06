@@ -1,3 +1,8 @@
-package com.bendev.ssdb.utils.command
+package com.bendev.ssdb.utils.command.content
 
-class EmptyContent : CommandContent("")
+import com.bendev.ssdb.utils.command.CommandContent
+
+class EmptyContent : CommandContent("") {
+
+    override fun isWellFormatted(): Boolean = true
+}

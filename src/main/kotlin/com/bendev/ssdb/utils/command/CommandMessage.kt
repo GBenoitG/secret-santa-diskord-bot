@@ -32,6 +32,8 @@ open class CommandMessage(
                 else -> EmptyContent()
             }
 
+            if (!content.isWellFormatted()) return null
+
             return CommandMessage(command, content)
 
         }
