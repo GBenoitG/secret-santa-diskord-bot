@@ -1,5 +1,6 @@
 package com.bendev.ssdb
 
+import com.bendev.ssdb.database.SecretSantaDatabase
 import com.bendev.ssdb.listener.MessageListener
 import com.bendev.ssdb.utils.Constant
 import com.bendev.ssdb.utils.properties.PropertiesManager
@@ -30,6 +31,8 @@ class Bot {
             ).build()
 
         jda.presence.activity = Activity.playing(properties.playingAt)
+
+        SecretSantaDatabase.initDatabse()
 
     }
 
