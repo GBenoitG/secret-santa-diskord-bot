@@ -2,9 +2,9 @@ package com.bendev.ssdb
 
 import com.bendev.ssdb.database.SecretSantaDatabase
 import com.bendev.ssdb.listener.MessageListener
+import com.bendev.ssdb.listener.ReactionListener
 import com.bendev.ssdb.utils.Constant
 import com.bendev.ssdb.utils.properties.PropertiesManager
-import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.requests.GatewayIntent
@@ -27,7 +27,8 @@ class Bot {
                 GatewayIntent.GUILD_MESSAGE_REACTIONS,
                 GatewayIntent.GUILD_EMOJIS
             ).addEventListeners(
-                        MessageListener()
+                MessageListener(),
+                ReactionListener()
             ).build()
 
         jda.presence.activity = Activity.playing(properties.playingAt)

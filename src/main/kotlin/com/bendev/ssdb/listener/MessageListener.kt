@@ -25,15 +25,7 @@ class MessageListener : ListenerAdapter() {
             return
         }
 
-        when (commandMessage.commandName) {
-            Commands.CommandName.INVITATION -> {
-                commandMessage.content as InvitationContent
-                commandMessage.content.reactions.forEach {emoji ->
-                    if (emoji.isEmpty()) throw Exception("Emote is empty")
-                    event.message.addReaction(emoji).queue()
-                }
-            }
-        }
+        commandMessage.content.onMessageReceived(event)
 
     }
 
