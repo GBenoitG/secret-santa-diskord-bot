@@ -1,6 +1,8 @@
 package com.bendev.ssdb.utils.command
 
 import com.bendev.ssdb.utils.Constant
+import com.bendev.ssdb.utils.command.content.EmptyContent
+import com.bendev.ssdb.utils.command.content.InvitationContent
 import net.dv8tion.jda.api.entities.Message
 
 open class CommandMessage(
@@ -28,7 +30,7 @@ open class CommandMessage(
                     .find { it.value.contains(prefixedCommand.removePrefix(Constant.PREFIX)) } ?: return null
 
             val content = when (command) {
-                Commands.CommandName.COMMAND -> EmptyContent()
+                Commands.CommandName.INVITATION -> InvitationContent(rawContent)
                 else -> EmptyContent()
             }
 
