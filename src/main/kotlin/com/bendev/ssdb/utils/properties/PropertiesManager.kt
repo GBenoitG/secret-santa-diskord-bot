@@ -2,6 +2,8 @@ package com.bendev.ssdb.utils.properties
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.User
 import java.io.File
 
 object PropertiesManager {
@@ -52,12 +54,26 @@ object PropertiesManager {
     private fun initPropertiesFile(file: File) {
         val defaultProperties = Properties(
             token = "",
-        playingAt = "")
+        playingAt = "",
+        allowedRolesName = mutableListOf(""),
+        allowedUsersId = mutableListOf("")
+        )
 
         val dataToWrite = json.encodeToString(Properties.serializer(), defaultProperties)
         file.outputStream().use {
             it.write(dataToWrite.toByteArray(Charsets.UTF_8))
         }
+    }
+
+    fun isUserAllowed(guild: Guild, user: User): Boolean {
+
+        val adminRoles = guild.roles.filter { properties.allowedRolesName.contains(it.name) }
+        val adminUsers = guild.getMembersWithRoles(adminRoles).map { it.user.id }.toMutableList()
+
+        adminUsers.addAll(properties.allowedUsersId)
+
+        return adminUsers.any { it == user.id }
+
     }
 
     fun initFile(propertiesFilePath: String): File {

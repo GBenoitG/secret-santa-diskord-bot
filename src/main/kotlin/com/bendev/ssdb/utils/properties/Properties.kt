@@ -5,7 +5,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Properties(
-        var token: String,
+        val token: String,
         @SerialName("playing_at")
-        var playingAt: String
+        val playingAt: String,
+        @SerialName("allowed_roles_list")
+        var allowedRolesName: MutableList<String>,
+        @SerialName("allowed_users_id_list")
+        var allowedUsersId: MutableList<String>
 )

@@ -48,3 +48,4 @@ peformance/build
 
 # bot properties
 properties.json
+/*.db
