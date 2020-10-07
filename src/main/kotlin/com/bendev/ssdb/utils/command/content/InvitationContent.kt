@@ -87,6 +87,7 @@ class InvitationContent(rawContent: String) : CommandContent(rawContent) {
             if (emoji.first.isEmpty()) throw Exception("Emote is empty")
             event.message.addReaction(emoji.first).queue()
         }
+        event.message.pin().queue()
     }
 
     enum class ReactionType {

@@ -9,7 +9,7 @@ data class Properties(
         @SerialName("playing_at")
         val playingAt: String,
         @SerialName("allowed_roles_list")
-        var allowedRolesName: MutableList<String> = mutableListOf(),
+        var allowedRolesName: MutableList<String>,
         @SerialName("allowed_users_id_list")
-        var allowedUsersId: MutableList<String> = mutableListOf()
+        var allowedUsersId: MutableList<String>
 )

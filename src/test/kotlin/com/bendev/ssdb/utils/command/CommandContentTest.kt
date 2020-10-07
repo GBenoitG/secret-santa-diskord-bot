@@ -12,7 +12,7 @@ class CommandContentTest {
     fun givenGoodRawMessage_initInvitationContent_shouldReturnGoodInvitationCommand() {
 
         // Given raw message
-        val rawMessage = "This is a raw message well formatted :\n✅ I'm in\n❌ No I skip\n⏲ I think about it"
+        val rawMessage = FakeMessage.FAKE_VALID_RAW_MESSAGE_INVITATION
 
         // Init InivitationContent
         val invitation = InvitationContent(rawMessage)

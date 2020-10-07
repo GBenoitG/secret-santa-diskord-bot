@@ -56,7 +56,8 @@ object PropertiesManager {
             token = "",
         playingAt = "",
         allowedRolesName = mutableListOf(""),
-        allowedUsersId = mutableListOf(""))
+        allowedUsersId = mutableListOf("")
+        )
 
         val dataToWrite = json.encodeToString(Properties.serializer(), defaultProperties)
         file.outputStream().use {
