@@ -4,11 +4,13 @@ import com.bendev.ssdb.database.SecretSantaDatabase
 import com.bendev.ssdb.listener.MessageListener
 import com.bendev.ssdb.listener.ReactionListener
 import com.bendev.ssdb.utils.Constant
+import com.bendev.ssdb.utils.I18nManager
 import com.bendev.ssdb.utils.properties.PropertiesManager
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.requests.GatewayIntent
 import java.io.IOException
+import java.util.*
 import javax.security.auth.login.LoginException
 
 class Bot {
@@ -34,6 +36,8 @@ class Bot {
         jda.presence.activity = Activity.playing(properties.playingAt)
 
         SecretSantaDatabase.initDatabse()
+
+        I18nManager.initWithLocale(Locale.forLanguageTag(properties.localeLanguage))
 
     }
 
