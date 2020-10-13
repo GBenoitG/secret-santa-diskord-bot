@@ -53,10 +53,11 @@ object PropertiesManager {
 
     private fun initPropertiesFile(file: File) {
         val defaultProperties = Properties(
-            token = "",
-        playingAt = "",
-        allowedRolesName = mutableListOf(""),
-        allowedUsersId = mutableListOf("")
+                token = "",
+                playingAt = "",
+                allowedRolesName = mutableListOf(""),
+                allowedUsersId = mutableListOf(""),
+                localeLanguage = "Default"
         )
 
         val dataToWrite = json.encodeToString(Properties.serializer(), defaultProperties)
