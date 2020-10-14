@@ -4,12 +4,14 @@ import com.bendev.ssdb.database.SecretSantaDatabase
 import com.bendev.ssdb.database.dao.Participant
 import com.bendev.ssdb.database.table.Participants
 import com.bendev.ssdb.utils.Constant
+import com.bendev.ssdb.utils.I18nManager
+import com.bendev.ssdb.utils.I18nManager.getFormattedString
 import com.bendev.ssdb.utils.command.CommandContent
+import com.bendev.ssdb.utils.command.Commands
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent
-import java.lang.Exception
 
 class InvitationContent(rawContent: String) : CommandContent(rawContent) {
 
@@ -60,18 +62,41 @@ class InvitationContent(rawContent: String) : CommandContent(rawContent) {
     }
 
     private fun positiveAction(event: GenericMessageReactionEvent) {
-        SecretSantaDatabase.transactionDao {
             when (event) {
-                is MessageReactionAddEvent -> Participant.new {
-                    discordId = event.userId
-                    nickname = event.user?.name ?: ""
+                is MessageReactionAddEvent -> {
+                    val participant = SecretSantaDatabase.transactionDao {
+                        Participant.new {
+                            discordId = event.userId
+                            nickname = event.user?.name ?: ""
+                        }
+                    }
+                    sendRegistrationMessage(participant, event)
                 }
                 is MessageReactionRemoveEvent -> {
-                    val result = Participant.find {
-                        Participants.discordId eq event.userId
+                    SecretSantaDatabase.transactionDao {
+                        val result = Participant.find {
+                            Participants.discordId eq event.userId
+                        }.elementAtOrNull(0) ?: return@transactionDao
+                        result.delete()
                     }
-                    if (result.empty()) return@transactionDao
-                    result.first().delete()
+                }
+            }
+    }
+
+    private fun sendRegistrationMessage(participant: Participant, event: GenericMessageReactionEvent) {
+        if (participant.registrationStep != null) return
+        event.member?.apply {
+            user.openPrivateChannel().queue {
+                it.sendMessage(
+                        I18nManager.messageStrings
+                                .getFormattedString(
+                                        "registration_message_introduction",
+                                        "${Commands.CommandName.REGISTRATION.getFullCommand()} ${Participants.Step.START.name.toLowerCase()}"
+                                )
+                ).queue {
+                    SecretSantaDatabase.transactionDao {
+                        participant.registrationStep = Participants.Step.NONE
+                    }
                 }
             }
         }
