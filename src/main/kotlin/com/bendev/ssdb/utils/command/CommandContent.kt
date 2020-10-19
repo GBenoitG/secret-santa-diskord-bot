@@ -1,6 +1,7 @@
 package com.bendev.ssdb.utils.command
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent
 
 abstract class CommandContent(
@@ -22,4 +23,9 @@ abstract class CommandContent(
      *
      * */
     open fun onMessageReceived(event: MessageReceivedEvent) {}
+
+    /**
+     *
+     * */
+    open fun onPrivateMessageReceived(event: PrivateMessageReceivedEvent) {}
 }
