@@ -5,7 +5,7 @@ import com.bendev.ssdb.listener.MessageListener
 import com.bendev.ssdb.listener.PrivateMessageListener
 import com.bendev.ssdb.listener.ReactionListener
 import com.bendev.ssdb.utils.Constant
-import com.bendev.ssdb.utils.I18nManager
+import com.bendev.ssdb.utils.i18n.I18nManager
 import com.bendev.ssdb.utils.properties.PropertiesManager
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Activity

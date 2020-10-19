@@ -3,8 +3,8 @@ package com.bendev.ssdb.utils.command.content
 import com.bendev.ssdb.database.SecretSantaDatabase
 import com.bendev.ssdb.database.dao.Participant
 import com.bendev.ssdb.database.table.Participants
-import com.bendev.ssdb.utils.I18nManager
-import com.bendev.ssdb.utils.I18nManager.getFormattedString
+import com.bendev.ssdb.utils.i18n.I18nManager
+import com.bendev.ssdb.utils.i18n.I18nManager.getFormattedString
 import com.bendev.ssdb.utils.command.CommandContent
 import com.bendev.ssdb.utils.command.Commands
 import net.dv8tion.jda.api.entities.Message

@@ -1,4 +1,4 @@
-package com.bendev.ssdb.utils
+package com.bendev.ssdb.utils.i18n
 
 import java.text.MessageFormat
 import java.util.*
@@ -10,7 +10,7 @@ object I18nManager {
         get() = _messageStrings
 
     fun initWithLocale(locale: Locale) {
-        _messageStrings = ResourceBundle.getBundle("messages", locale)
+        _messageStrings = ResourceBundle.getBundle("messages", locale, UTF8Control())
     }
 
     fun ResourceBundle.getFormattedString(key: String, vararg arguments: Any?): String {
