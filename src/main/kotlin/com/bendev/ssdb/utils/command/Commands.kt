@@ -1,6 +1,8 @@
 package com.bendev.ssdb.utils.command
 
 import com.bendev.ssdb.utils.Constant
+import com.bendev.ssdb.utils.command.content.EmptyContent
+import com.bendev.ssdb.utils.command.content.RegistrationContent
 import org.jetbrains.annotations.NotNull
 import kotlin.reflect.KClass
 
@@ -10,10 +12,11 @@ object Commands {
         /**
          * Help command display a list of help
          * */
-        INVITATION(CommandContent::class, "invitation");
+        INVITATION(CommandContent::class, "invitation"),
+        REGISTRATION(RegistrationContent::class, "registration");
 
         fun getFullCommand(): String {
-            return "${Constant.PREFIX}${this.value}"
+            return "${Constant.PREFIX}${value[0]}"
         }
 
         companion object {

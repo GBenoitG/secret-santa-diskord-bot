@@ -9,11 +9,11 @@ object Participants : LongIdTable(name = "participants") {
     val registrationStep: Column<Step?> = enumeration("registration_step", Step::class).nullable()
     val secretLetter: Column<String> = text("secret_letter").default("")
 
-    enum class Step {
-        NONE,
-        START,
-        LETTER,
-        FINISH;
+    enum class Step(val isRepeatable: Boolean) {
+        NONE(false),
+        START(false),
+        LETTER(true),
+        FINISH(false);
 
         fun getNext(): Step? {
             return if (ordinal == values().size-1)
