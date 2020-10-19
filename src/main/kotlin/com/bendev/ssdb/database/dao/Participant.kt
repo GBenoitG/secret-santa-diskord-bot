@@ -10,4 +10,5 @@ class Participant(id: EntityID<Long>) : LongEntity(id) {
     var discordId by Participants.discordId
     var nickname by Participants.nickname
     var registrationStep by Participants.registrationStep
+    var secretLetter by Participants.secretLetter
 }
