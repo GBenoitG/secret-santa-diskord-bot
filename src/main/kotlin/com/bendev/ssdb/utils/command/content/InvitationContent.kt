@@ -4,12 +4,14 @@ import com.bendev.ssdb.database.SecretSantaDatabase
 import com.bendev.ssdb.database.dao.Participant
 import com.bendev.ssdb.database.table.Participants
 import com.bendev.ssdb.utils.Constant
+import com.bendev.ssdb.utils.MessageSender
+import com.bendev.ssdb.utils.i18n.I18nManager
 import com.bendev.ssdb.utils.command.CommandContent
+import com.bendev.ssdb.utils.command.Commands
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent
-import java.lang.Exception
 
 class InvitationContent(rawContent: String) : CommandContent(rawContent) {
 
@@ -60,18 +62,64 @@ class InvitationContent(rawContent: String) : CommandContent(rawContent) {
     }
 
     private fun positiveAction(event: GenericMessageReactionEvent) {
-        SecretSantaDatabase.transactionDao {
             when (event) {
-                is MessageReactionAddEvent -> Participant.new {
-                    discordId = event.userId
-                    nickname = event.user?.name ?: ""
-                }
-                is MessageReactionRemoveEvent -> {
-                    val result = Participant.find {
-                        Participants.discordId eq event.userId
+                // Add reaction event: create or find user already created before
+                is MessageReactionAddEvent -> {
+                    val participant = SecretSantaDatabase.transactionDao {
+                        Participant.find {
+                            Participants.discordId eq event.userId
+                        }.firstOrNull() ?: Participant.new {
+                            discordId = event.userId
+                            nickname = event.user?.name ?: ""
+                        }
                     }
-                    if (result.empty()) return@transactionDao
-                    result.first().delete()
+                    sendRegistrationMessage(participant, event)
+                }
+
+                is MessageReactionRemoveEvent -> {
+                    val result = SecretSantaDatabase.transactionDao {
+                        Participant.find {
+                            Participants.discordId eq event.userId
+                        }.elementAtOrNull(0)
+                    } ?: return
+                    if ((result.registrationStep?.ordinal ?: 0) >= Participants.Step.START.ordinal) {
+                        event.user?.openPrivateChannel()?.queue { private ->
+                            MessageSender.sendAnswerableMessage(
+                                    private,
+                                    "invitation_warning_before_unsubscribe",
+                                    arguments = emptyArray(),
+                                    answers = arrayOf(
+                                            MessageSender.Answers("✅", I18nManager.getCommonString("yes")) {
+                                                SecretSantaDatabase.transactionDao {
+                                                    result.delete()
+                                                }
+                                            },
+                                            MessageSender.Answers("❌", I18nManager.getCommonString("no")) {
+                                                MessageSender.sendMessage(
+                                                        private,
+                                                        "invitation_warning_pls_check_back") { /*nothing*/ }
+                                            }
+                                    )
+                            )
+                        }
+                    }
+                }
+            }
+    }
+
+    private fun sendRegistrationMessage(participant: Participant, event: GenericMessageReactionEvent) {
+        if (participant.registrationStep != null) return
+        event.member?.apply {
+            user.openPrivateChannel().queue {
+                MessageSender.sendMessage(
+                        it,
+                        "registration_message_introduction",
+                        Commands.CommandName.REGISTRATION.getFullCommand(),
+                        Participants.Step.START.name.toLowerCase()
+                ) {
+                    SecretSantaDatabase.transactionDao {
+                        participant.registrationStep = Participants.Step.NONE
+                    }
                 }
             }
         }

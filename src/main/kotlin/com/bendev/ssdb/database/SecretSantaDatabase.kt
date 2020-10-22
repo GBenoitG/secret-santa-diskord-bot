@@ -39,10 +39,8 @@ class SecretSantaDatabase private constructor(val database: Database){
             }
         }
 
-        fun transactionDao(action: () -> Unit) {
-            transaction {
-                action.invoke()
-            }
+        fun <T> transactionDao(action: () -> T) = transaction {
+            return@transaction action.invoke()
         }
 
     }

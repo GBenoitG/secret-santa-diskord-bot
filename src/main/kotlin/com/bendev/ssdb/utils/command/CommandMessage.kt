@@ -3,6 +3,7 @@ package com.bendev.ssdb.utils.command
 import com.bendev.ssdb.utils.Constant
 import com.bendev.ssdb.utils.command.content.EmptyContent
 import com.bendev.ssdb.utils.command.content.InvitationContent
+import com.bendev.ssdb.utils.command.content.RegistrationContent
 import net.dv8tion.jda.api.entities.Message
 
 open class CommandMessage(
@@ -31,6 +32,7 @@ open class CommandMessage(
 
             val content = when (command) {
                 Commands.CommandName.INVITATION -> InvitationContent(rawContent)
+                Commands.CommandName.REGISTRATION -> RegistrationContent(rawContent)
                 else -> EmptyContent()
             }
 

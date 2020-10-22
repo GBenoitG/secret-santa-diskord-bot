@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 
 class ReactionListener : ListenerAdapter() {
 
+    var answerableMessageListener: MutableMap<String, (String) -> Unit> = hashMapOf()
+
     override fun onGenericMessageReaction(event: GenericMessageReactionEvent) {
         super.onGenericMessageReaction(event)
 
@@ -15,6 +17,9 @@ class ReactionListener : ListenerAdapter() {
             commandMessage.content.onGenericMessageReaction(event)
 
         }
+
+        if (event.user?.isBot == true) return
+        answerableMessageListener[event.messageId]?.invoke(event.reactionEmote.emoji)
 
     }
 

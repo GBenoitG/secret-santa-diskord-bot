@@ -1,5 +1,6 @@
 package com.bendev.ssdb.utils
 
+import com.bendev.ssdb.utils.i18n.I18nManager
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

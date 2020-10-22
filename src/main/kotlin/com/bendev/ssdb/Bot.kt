@@ -2,9 +2,10 @@ package com.bendev.ssdb
 
 import com.bendev.ssdb.database.SecretSantaDatabase
 import com.bendev.ssdb.listener.MessageListener
+import com.bendev.ssdb.listener.PrivateMessageListener
 import com.bendev.ssdb.listener.ReactionListener
 import com.bendev.ssdb.utils.Constant
-import com.bendev.ssdb.utils.I18nManager
+import com.bendev.ssdb.utils.i18n.I18nManager
 import com.bendev.ssdb.utils.properties.PropertiesManager
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Activity
@@ -21,17 +22,18 @@ class Bot {
         val properties = PropertiesManager.loadPropertiesFromFile(Constant.PROPERTIES_FILE_PATH)
 
         val jda = JDABuilder
-            .create(
-                properties.token,
-                GatewayIntent.DIRECT_MESSAGES,
-                GatewayIntent.DIRECT_MESSAGE_REACTIONS,
-                GatewayIntent.GUILD_MESSAGES,
-                GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                GatewayIntent.GUILD_EMOJIS
-            ).addEventListeners(
-                MessageListener(),
-                ReactionListener()
-            ).build()
+                .create(
+                        properties.token,
+                        GatewayIntent.DIRECT_MESSAGES,
+                        GatewayIntent.DIRECT_MESSAGE_REACTIONS,
+                        GatewayIntent.GUILD_MESSAGES,
+                        GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                        GatewayIntent.GUILD_EMOJIS
+                ).addEventListeners(
+                        MessageListener(),
+                        PrivateMessageListener(),
+                        ReactionListener()
+                ).build()
 
         jda.presence.activity = Activity.playing(properties.playingAt)
 

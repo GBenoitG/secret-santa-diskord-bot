@@ -22,7 +22,7 @@ class CommandContentTest {
         assertEquals(invitation.description, "This is a raw message well formatted")
 
         assertEquals(invitation.reactions.size, 3)
-        assertEquals(invitation.reactions, listOf("✅", "❌", "⏲"))
+        assertEquals(invitation.reactions.map { it.first }, listOf("✅", "❌", "⏲"))
 
     }
 
