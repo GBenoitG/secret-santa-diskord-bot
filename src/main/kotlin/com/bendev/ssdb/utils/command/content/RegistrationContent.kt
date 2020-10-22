@@ -31,7 +31,7 @@ class RegistrationContent(rawContent: String) : CommandContent(rawContent) {
     override fun onPrivateMessageReceived(event: PrivateMessageReceivedEvent) {
         super.onPrivateMessageReceived(event)
 
-        val step = this.step ?: return
+        val step = this.step ?: Participants.Step.NONE
 
         // get current participant or return if null
         val participant = SecretSantaDatabase.transactionDao {
@@ -41,14 +41,14 @@ class RegistrationContent(rawContent: String) : CommandContent(rawContent) {
         } ?: return
 
         // check if current step (in the command) is repeatable OR
-        if ((participant.registrationStep?.getNext() != step).also { print(it) }
+        if (participant.registrationStep?.getNext() != step
                 && !step.isRepeatable) {
             MessageSender.sendMessage(
                     event.channel,
                     "registration_error_bad_step",
                     Commands.CommandName.REGISTRATION.getFullCommand(),
                     participant.registrationStep?.getNext()?.name?.toLowerCase() ?: ""
-            ) {/*nothing*/}
+            ) { /*nothing*/ }
             return
         }
 
@@ -82,7 +82,7 @@ class RegistrationContent(rawContent: String) : CommandContent(rawContent) {
                         Commands.CommandName.REGISTRATION.getFullCommand(),
                         Participants.Step.FINISH.name.toLowerCase(),
                         Participants.Step.LETTER.name.toLowerCase()
-                ) {/*nothing*/ }
+                ) { /*nothing*/ }
             }
 
             Participants.Step.FINISH -> {
@@ -93,10 +93,15 @@ class RegistrationContent(rawContent: String) : CommandContent(rawContent) {
                 MessageSender.sendMessage(
                         event.channel,
                         "registration_finish_message"
-                ) {/*nothing*/}
+                ) { /*nothing*/ }
             }
 
-            else -> {}
+            else -> {
+                MessageSender.sendMessage(
+                        event.channel,
+                        "registration_error_no_step_found"
+                ) { /*nothing*/ }
+            }
         }
 
     }
