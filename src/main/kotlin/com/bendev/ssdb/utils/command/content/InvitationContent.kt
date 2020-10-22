@@ -4,8 +4,8 @@ import com.bendev.ssdb.database.SecretSantaDatabase
 import com.bendev.ssdb.database.dao.Participant
 import com.bendev.ssdb.database.table.Participants
 import com.bendev.ssdb.utils.Constant
+import com.bendev.ssdb.utils.MessageSender
 import com.bendev.ssdb.utils.i18n.I18nManager
-import com.bendev.ssdb.utils.i18n.I18nManager.getFormattedString
 import com.bendev.ssdb.utils.command.CommandContent
 import com.bendev.ssdb.utils.command.Commands
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
@@ -63,6 +63,7 @@ class InvitationContent(rawContent: String) : CommandContent(rawContent) {
 
     private fun positiveAction(event: GenericMessageReactionEvent) {
             when (event) {
+                // Add reaction event: create or find user already created before
                 is MessageReactionAddEvent -> {
                     val participant = SecretSantaDatabase.transactionDao {
                         Participant.new {
@@ -72,6 +73,7 @@ class InvitationContent(rawContent: String) : CommandContent(rawContent) {
                     }
                     sendRegistrationMessage(participant, event)
                 }
+
                 is MessageReactionRemoveEvent -> {
                     SecretSantaDatabase.transactionDao {
                         val result = Participant.find {
@@ -87,13 +89,12 @@ class InvitationContent(rawContent: String) : CommandContent(rawContent) {
         if (participant.registrationStep != null) return
         event.member?.apply {
             user.openPrivateChannel().queue {
-                it.sendMessage(
-                        I18nManager.messageStrings
-                                .getFormattedString(
-                                        "registration_message_introduction",
-                                        "${Commands.CommandName.REGISTRATION.getFullCommand()} ${Participants.Step.START.name.toLowerCase()}"
-                                )
-                ).queue {
+                MessageSender.sendMessage(
+                        it,
+                        "registration_message_introduction",
+                        Commands.CommandName.REGISTRATION.getFullCommand(),
+                        Participants.Step.START.name.toLowerCase()
+                ) {
                     SecretSantaDatabase.transactionDao {
                         participant.registrationStep = Participants.Step.NONE
                     }
