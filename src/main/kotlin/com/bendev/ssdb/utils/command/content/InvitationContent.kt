@@ -66,7 +66,9 @@ class InvitationContent(rawContent: String) : CommandContent(rawContent) {
                 // Add reaction event: create or find user already created before
                 is MessageReactionAddEvent -> {
                     val participant = SecretSantaDatabase.transactionDao {
-                        Participant.new {
+                        Participant.find {
+                            Participants.discordId eq event.userId
+                        }.firstOrNull() ?: Participant.new {
                             discordId = event.userId
                             nickname = event.user?.name ?: ""
                         }
@@ -75,11 +77,31 @@ class InvitationContent(rawContent: String) : CommandContent(rawContent) {
                 }
 
                 is MessageReactionRemoveEvent -> {
-                    SecretSantaDatabase.transactionDao {
-                        val result = Participant.find {
+                    val result = SecretSantaDatabase.transactionDao {
+                        Participant.find {
                             Participants.discordId eq event.userId
-                        }.elementAtOrNull(0) ?: return@transactionDao
-                        result.delete()
+                        }.elementAtOrNull(0)
+                    } ?: return
+                    if ((result.registrationStep?.ordinal ?: 0) >= Participants.Step.START.ordinal) {
+                        event.user?.openPrivateChannel()?.queue { private ->
+                            MessageSender.sendAnswerableMessage(
+                                    private,
+                                    "invitation_warning_before_unsubscribe",
+                                    arguments = emptyArray(),
+                                    answers = arrayOf(
+                                            MessageSender.Answers("✅", I18nManager.getCommonString("yes")) {
+                                                SecretSantaDatabase.transactionDao {
+                                                    result.delete()
+                                                }
+                                            },
+                                            MessageSender.Answers("❌", I18nManager.getCommonString("no")) {
+                                                MessageSender.sendMessage(
+                                                        private,
+                                                        "invitation_warning_pls_check_back") { /*nothing*/ }
+                                            }
+                                    )
+                            )
+                        }
                     }
                 }
             }
