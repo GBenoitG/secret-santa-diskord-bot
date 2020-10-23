@@ -22,6 +22,20 @@ object MessageSender {
         }
     }
 
+    fun sendError(channel: MessageChannel,
+                    key: String,
+                    vararg arguments: String,
+                    onSuccess: (Message) -> Unit) {
+        channel.sendMessage(
+                I18nManager.getErrorString(
+                        key,
+                        *arguments
+                )
+        ).queue {
+            onSuccess.invoke(it)
+        }
+    }
+
     fun sendAnswerableMessage(channel: MessageChannel,
                               key: String,
                               vararg arguments: String?,
