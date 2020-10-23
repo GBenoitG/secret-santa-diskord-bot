@@ -9,8 +9,9 @@ object Commands {
         /**
          * Help command display a list of help
          * */
-        INVITATION(CommandContent::class, "invitation"),
-        REGISTRATION(RegistrationContent::class, "registration");
+        INVITATION(true, "invitation"),
+        REGISTRATION(false, "registration"),
+        SHUFFLE(true, "shuffle");
 
         fun getFullCommand(): String {
             return "${Constant.PREFIX}${value[0]}"
