@@ -44,4 +44,6 @@ open class CommandMessage(
 
     }
 
+    fun isAdminOnly() = commandName.isAdminOnly
+
 }
