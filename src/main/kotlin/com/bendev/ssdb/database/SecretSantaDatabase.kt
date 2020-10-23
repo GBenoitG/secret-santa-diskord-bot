@@ -1,10 +1,7 @@
 package com.bendev.ssdb.database
 
 import com.bendev.ssdb.database.table.Participants
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class SecretSantaDatabase private constructor(val database: Database){
@@ -39,8 +36,8 @@ class SecretSantaDatabase private constructor(val database: Database){
             }
         }
 
-        fun <T> transactionDao(action: () -> T) = transaction {
-            return@transaction action.invoke()
+        fun <T> transactionDao(action: Transaction.() -> T) = transaction {
+            return@transaction action.invoke(this)
         }
 
     }
