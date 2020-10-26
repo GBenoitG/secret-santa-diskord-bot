@@ -9,8 +9,6 @@ import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.transactions.transaction
 
 class ShuffleContent : CommandContent("") {
 
@@ -31,10 +29,13 @@ class ShuffleContent : CommandContent("") {
             // get all participant who are validate the conditions : at least Step.Letter with a secretLetter written
             val participantList = Participant.find {
                 (Participants.registrationStep greaterEq Participants.Step.LETTER) and
-                        (Participants.secretLetter greater "")
+                        (Participants.secretLetter greater "") and
+                        Participants.secretSanta.isNull()
             }.map { it }
 
-            if (participantList.size <= 1) return@transactionDao TransactionStatus(Status.ERROR, "")
+            if (participantList.size <= 1) return@transactionDao TransactionStatus(
+                    Status.ERROR,
+                    "error_shuffle_not_enough_participants")
 
             // shuffle participant list
             val newList = participantList.shuffled()
