@@ -11,6 +11,8 @@ class ReactionListener : ListenerAdapter() {
     override fun onGenericMessageReaction(event: GenericMessageReactionEvent) {
         super.onGenericMessageReaction(event)
 
+        if (event.user?.isBot == true) return
+
         event.channel.retrieveMessageById(event.messageId).queue { message ->
             val commandMessage = CommandMessage.parseCommandFromMessage(message) ?: return@queue
 
@@ -18,7 +20,6 @@ class ReactionListener : ListenerAdapter() {
 
         }
 
-        if (event.user?.isBot == true) return
         answerableMessageListener[event.messageId]?.invoke(event.reactionEmote.emoji)
 
     }
