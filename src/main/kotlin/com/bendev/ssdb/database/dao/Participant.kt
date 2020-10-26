@@ -11,4 +11,5 @@ class Participant(id: EntityID<Long>) : LongEntity(id) {
     var nickname by Participants.nickname
     var registrationStep by Participants.registrationStep
     var secretLetter by Participants.secretLetter
+    var secretSanta by Participant optionalReferencedOn Participants.secretSanta
 }

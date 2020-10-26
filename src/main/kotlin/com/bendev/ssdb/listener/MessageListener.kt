@@ -1,5 +1,6 @@
 package com.bendev.ssdb.listener
 
+import com.bendev.ssdb.utils.MessageSender
 import com.bendev.ssdb.utils.command.CommandMessage
 import com.bendev.ssdb.utils.properties.PropertiesManager
 import net.dv8tion.jda.api.entities.ChannelType
@@ -17,9 +18,15 @@ class MessageListener : ListenerAdapter() {
         val jda = event.jda
         val commandMessage = CommandMessage.parseCommandFromMessage(event.message) ?: return
 
-        if (!PropertiesManager.isUserAllowed(event.guild, event.author)) {
-            event.message.addReaction("❌").queue()
-            return
+        if (commandMessage.isAdminOnly() && !PropertiesManager.isUserAllowed(event.message.guild, event.author)) {
+            event.author.openPrivateChannel().queue {
+                MessageSender.sendError(
+                        it,
+                        "error_command_forbidden",
+                        commandMessage.commandName.getFullCommand()
+                ) { /*nothing*/ }
+            }
+            event.message.delete().queue()
         }
 
         commandMessage.content.onMessageReceived(event)
