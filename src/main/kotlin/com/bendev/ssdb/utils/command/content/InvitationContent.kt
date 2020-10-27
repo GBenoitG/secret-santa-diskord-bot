@@ -83,7 +83,7 @@ class InvitationContent(rawContent: String) : CommandContent(rawContent) {
                         }.elementAtOrNull(0)
                     } ?: return
                     if ((result.registrationStep?.ordinal ?: 0) >= Participants.Step.START.ordinal) {
-                        event.user?.openPrivateChannel()?.queue { private ->
+                        event.jda.openPrivateChannelById(result.discordId).queue { private ->
                             MessageSender.sendAnswerableMessage(
                                     private,
                                     "invitation_warning_before_unsubscribe",

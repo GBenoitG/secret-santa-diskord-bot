@@ -54,8 +54,11 @@ object MessageSender {
 
             val listener = channel.jda.registeredListeners.find { it is ReactionListener } as ReactionListener
             listener.answerableMessageListener[msg.id] = { emote ->
-                answers.find { it.emoji == emote }?.action?.invoke()
-                msg.delete().queue()
+                val answer = answers.find { it.emoji == emote }
+                if (answer != null) {
+                    answer.action.invoke()
+                    msg.delete().queue()
+                }
             }
 
         }
