@@ -1,11 +1,14 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.4.10'
+    id 'application'
 }
 
 // SSDB = Secret Santa Diskord Bot
 group 'com.bendev.ssdb'
 version '1.0-SNAPSHOT'
+
+mainClassName = "com.bendev.ssdb.BotKt"
 
 repositories {
     jcenter()
