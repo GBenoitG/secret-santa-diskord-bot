@@ -19,10 +19,10 @@ class InvitationContent(rawContent: String) : CommandContent(rawContent) {
     val reactions: List<Pair<String, ReactionType>>
 
     init {
-
-        val description = rawContent.split(":")[0].trim()
+        val splitMessage = rawContent.split(":")
+        val description = splitMessage[0].trim()
         val regex = Constant.REGEX_ALL_EMOJIS
-        this.reactions = regex.findAll(rawContent).run {
+        this.reactions = regex.findAll(splitMessage[1].trim()).run {
             val list = mutableListOf<Pair<String, ReactionType>>()
             forEachIndexed { index, item ->
                 list.add(Pair(item.value, ReactionType.values()[index]))
