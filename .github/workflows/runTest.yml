@@ -20,5 +20,8 @@ jobs:
         with:
           java-version: 1.8
 
+      - name: "Change wrapper permissions"
+        run: chmod +x ./gradlew
+
       - name: "Gradle test"
         run: ./gradlew test
