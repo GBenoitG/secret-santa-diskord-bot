@@ -18,16 +18,7 @@ jobs:
       - name: "Setup JDK"
         uses: actions/setup-java@v1
         with:
-          java-version: 8
+          java-version: 1.8
 
-      # Execute Gradle commands in GitHub Actions workflows
-      # => https://github.com/marketplace/actions/gradle-command
       - name: "Gradle test"
-        uses: eskatos/gradle-command-action@v1.3.3
-        with:
-          arguments: test
-          wrapper-cache-enabled: true
-          dependencies-cache-enabled: true
-          configuration-cache-enabled: true
-      - name: "ls"
-        run: ls && ls ..
+        run: ./gradlew test
