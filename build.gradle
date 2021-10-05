@@ -6,7 +6,7 @@ plugins {
 
 // SSDB = Secret Santa Diskord Bot
 group 'com.bendev.ssdb'
-version '1.0-SNAPSHOT'
+version '0.0.1'
 
 mainClassName = "com.bendev.ssdb.BotKt"
 
