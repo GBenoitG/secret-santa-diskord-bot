@@ -32,8 +32,8 @@ open class CommandMessage(
                     .find { it.value.contains(prefixedCommand.removePrefix(Constant.PREFIX)) } ?: return null
 
             val content = when (command) {
-                Commands.CommandName.INVITATION -> InvitationContent(rawContent)
-                Commands.CommandName.REGISTRATION -> RegistrationContent(rawContent)
+                Commands.CommandName.INVITATION -> InvitationContent.InvitationContentFactory.create(rawContent)
+                Commands.CommandName.REGISTRATION -> RegistrationContent.RegistrationContentFactory.create(rawContent)
                 Commands.CommandName.SHUFFLE -> ShuffleContent()
                 else -> EmptyContent()
             }

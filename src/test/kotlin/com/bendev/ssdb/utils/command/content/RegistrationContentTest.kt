@@ -15,7 +15,7 @@ internal class RegistrationContentTest {
         val rawMessage = FakeMessage.FAKE_VALID_RAW_MESSAGE_START_REGISTRATION
 
         // Init RegistrationContent
-        val registration = RegistrationContent(rawMessage)
+        val registration = RegistrationContent.RegistrationContentFactory.create(rawMessage) as RegistrationContent
 
         // Assertion
         assertEquals(Participants.Step.START, registration.step)
@@ -30,7 +30,7 @@ internal class RegistrationContentTest {
         val rawMessage = "star"
 
         // Init RegistrationContent
-        val registration = RegistrationContent(rawMessage)
+        val registration = RegistrationContent.RegistrationContentFactory.create(rawMessage) as RegistrationContent
 
         // Assertion
         assertNull(registration.step)
@@ -42,7 +42,8 @@ internal class RegistrationContentTest {
     fun givenGoodInit_whenIsWellFormattedCalled_shouldReturnTrue() {
 
         // Given valid registration content
-        val registrationContent = RegistrationContent(FakeMessage.FAKE_VALID_RAW_MESSAGE_START_REGISTRATION)
+        val registrationContent = RegistrationContent.RegistrationContentFactory
+            .create(FakeMessage.FAKE_VALID_RAW_MESSAGE_START_REGISTRATION)
 
         // When isWellFormatted called
         val result = registrationContent.isWellFormatted()
@@ -55,7 +56,7 @@ internal class RegistrationContentTest {
     fun givenBadInit_whenIsWellFormattedCalled_shouldReturnFalse() {
 
         // Given bad registration content (like typing error)
-        val registrationContent = RegistrationContent("star")
+        val registrationContent = RegistrationContent.RegistrationContentFactory.create("star")
 
         // When isWellFormatted called
         val result = registrationContent.isWellFormatted()

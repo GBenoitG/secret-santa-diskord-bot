@@ -3,26 +3,17 @@ package com.bendev.ssdb.utils.command.content
 import com.bendev.ssdb.database.SecretSantaDatabase
 import com.bendev.ssdb.database.dao.Participant
 import com.bendev.ssdb.database.table.Participants
+import com.bendev.ssdb.utils.Constant
 import com.bendev.ssdb.utils.MessageSender
 import com.bendev.ssdb.utils.command.CommandContent
 import com.bendev.ssdb.utils.command.Commands
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent
 
-class RegistrationContent(rawContent: String) : CommandContent(rawContent) {
-
-    val step: Participants.Step?
+class RegistrationContent private constructor(
+    rawContent: String,
+    val step: Participants.Step?,
     val content: String
-
-    init {
-        val stepString: String = rawContent.trim().split(" ")[0]
-        val content = rawContent.removePrefix(stepString).trim()
-
-        val step = Participants.Step.values().find { it.name.equals(stepString, true) }
-
-        this.content = content
-        this.step = step
-
-    }
+) : CommandContent(rawContent) {
 
     override fun isWellFormatted(): Boolean {
         return step != null
@@ -101,6 +92,21 @@ class RegistrationContent(rawContent: String) : CommandContent(rawContent) {
                         event.channel,
                         "registration_error_no_step_found"
                 ) { /*nothing*/ }
+            }
+        }
+
+    }
+
+    class RegistrationContentFactory {
+
+        companion object {
+            fun create(rawContent: String): CommandContent {
+                val stepString: String = rawContent.trim().split(" ")[0]
+                val content = rawContent.removePrefix(stepString).trim()
+
+                val step = Participants.Step.values().find { it.name.equals(stepString, true) }
+
+                return RegistrationContent(rawContent, step, content)
             }
         }
 
