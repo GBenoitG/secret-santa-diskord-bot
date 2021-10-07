@@ -13,26 +13,11 @@ import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent
 
-class InvitationContent(rawContent: String) : CommandContent(rawContent) {
-
-    val description: String
+class InvitationContent private constructor(
+    rawContent: String,
+    val description: String,
     val reactions: List<Pair<String, ReactionType>>
-
-    init {
-        val splitMessage = rawContent.split(":")
-        val description = splitMessage[0].trim()
-        val regex = Constant.REGEX_ALL_EMOJIS
-        this.reactions = regex.findAll(splitMessage[1].trim()).run {
-            val list = mutableListOf<Pair<String, ReactionType>>()
-            forEachIndexed { index, item ->
-                list.add(Pair(item.value, ReactionType.values()[index]))
-            }
-            list
-        }
-
-        this.description = description
-
-    }
+): CommandContent(rawContent) {
 
     override fun isWellFormatted(): Boolean = description.isNotBlank() && reactions.size == 3
 
@@ -142,6 +127,30 @@ class InvitationContent(rawContent: String) : CommandContent(rawContent) {
         POSITIVE,
         NEGATIVE,
         STANDBY
+    }
+
+    class InvitationContentFactory {
+
+        companion object {
+            fun create(rawContent: String): CommandContent {
+                if (rawContent.isEmpty()) {
+                    return InvalidContent("InvitationContent should not be empty")
+                }
+                val splitMessage = rawContent.split(":")
+                val description = splitMessage[0].trim()
+                val regex = Constant.REGEX_ALL_EMOJIS
+                val reactions = regex.findAll(splitMessage[1].trim()).run {
+                    val list = mutableListOf<Pair<String, ReactionType>>()
+                    forEachIndexed { index, item ->
+                        list.add(Pair(item.value, ReactionType.values()[index]))
+                    }
+                    list
+                }
+
+                return InvitationContent(rawContent, description, reactions)
+            }
+        }
+
     }
     
 }

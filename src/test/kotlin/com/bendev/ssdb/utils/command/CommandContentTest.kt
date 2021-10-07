@@ -15,7 +15,7 @@ class CommandContentTest {
         val rawMessage = FakeMessage.FAKE_VALID_RAW_MESSAGE_INVITATION
 
         // Init InivitationContent
-        val invitation = InvitationContent(rawMessage)
+        val invitation = InvitationContent.InvitationContentFactory.create(rawMessage) as InvitationContent
 
         // Assertion
         assertEquals(invitation.source, "This is a raw message well formatted :\n✅ I'm in\n❌ No I skip\n⏲ I think about it")

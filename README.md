@@ -1,4 +1,6 @@
 # admin-discord-bot
+![](https://github.com/GBenoitG/secret-santa-diskord-bot/actions/workflows/allTest.yml/badge.svg)
+
 Another discord bot wrote in kotlin, to manage Secret Santa participation via discord.
 
 ## Installation
