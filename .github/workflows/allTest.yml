@@ -1,5 +1,5 @@
 
-name: runTest
+name: allTest
 
 on:
   push:
