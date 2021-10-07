@@ -1,6 +1,10 @@
 # Secret Santa Diskord Bot's
 
-## Version 0.0.1
+## 0.0.2
+
+* Add CI to automate testing.
+
+## 0.0.1
 
 * Add invitation command.
 * Add shuffle command.
