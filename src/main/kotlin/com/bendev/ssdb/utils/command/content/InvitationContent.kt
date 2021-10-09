@@ -5,9 +5,9 @@ import com.bendev.ssdb.database.dao.Participant
 import com.bendev.ssdb.database.table.Participants
 import com.bendev.ssdb.utils.Constant
 import com.bendev.ssdb.utils.MessageSender
-import com.bendev.ssdb.utils.i18n.I18nManager
 import com.bendev.ssdb.utils.command.CommandContent
 import com.bendev.ssdb.utils.command.Commands
+import com.bendev.ssdb.utils.i18n.I18nManager
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
@@ -27,11 +27,8 @@ class InvitationContent private constructor(
             it.first == event.reactionEmote.emoji
         }?.second
 
-        // Auto delete bad reaction from users
-        if (event is MessageReactionAddEvent && reactionType == null) {
-            event.reaction.removeReaction(event.user!!).queue()
-            return
-        }
+        // Auto delete bad reactions from users
+        handleBadReaction(event, reactionType)
 
         when (reactionType) {
             ReactionType.POSITIVE -> {
@@ -100,7 +97,7 @@ class InvitationContent private constructor(
                         it,
                         "registration_message_introduction",
                         Commands.CommandName.REGISTRATION.getFullCommand(),
-                        Participants.Step.START.name.toLowerCase()
+                        Participants.Step.START.name.lowercase()
                 ) {
                     SecretSantaDatabase.transactionDao {
                         participant.registrationStep = Participants.Step.NONE
@@ -112,6 +109,25 @@ class InvitationContent private constructor(
 
     private fun standByAction(event: GenericMessageReactionEvent) {
 
+    }
+
+    private fun handleBadReaction(event: GenericMessageReactionEvent, reactionType: ReactionType?) {
+        if (event is MessageReactionAddEvent) {
+            // remove all bad reaction that is not match with expected ReactionType
+            if (reactionType == null) {
+                event.reaction.removeReaction(event.user!!).queue()
+                return
+            }
+
+            val currentEmote = event.reactionEmote
+            event.retrieveMessage().queue { message ->
+                message.reactions.forEach {
+                    if (it.reactionEmote != currentEmote)
+                        it.removeReaction(event.user!!).queue()
+                }
+
+            }
+        }
     }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {

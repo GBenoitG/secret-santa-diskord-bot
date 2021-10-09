@@ -25,7 +25,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0' // JVM dependency
 
 //    JDA (Java Discord API)
-    implementation "net.dv8tion:JDA:4.2.1_255"
+    implementation "net.dv8tion:JDA:4.3.0_334"
 
 //    Database
     implementation 'org.jetbrains.exposed:exposed-core:0.35.1'

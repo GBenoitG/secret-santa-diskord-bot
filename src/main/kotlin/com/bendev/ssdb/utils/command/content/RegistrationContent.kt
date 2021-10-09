@@ -3,7 +3,6 @@ package com.bendev.ssdb.utils.command.content
 import com.bendev.ssdb.database.SecretSantaDatabase
 import com.bendev.ssdb.database.dao.Participant
 import com.bendev.ssdb.database.table.Participants
-import com.bendev.ssdb.utils.Constant
 import com.bendev.ssdb.utils.MessageSender
 import com.bendev.ssdb.utils.command.CommandContent
 import com.bendev.ssdb.utils.command.Commands
@@ -38,7 +37,7 @@ class RegistrationContent private constructor(
                     event.channel,
                     "registration_error_bad_step",
                     Commands.CommandName.REGISTRATION.getFullCommand(),
-                    participant.registrationStep?.getNext()?.name?.toLowerCase() ?: ""
+                    participant.registrationStep?.getNext()?.name?.lowercase() ?: ""
             ) { /*nothing*/ }
             return
         }
@@ -50,7 +49,7 @@ class RegistrationContent private constructor(
                         event.channel,
                         "registration_start_message",
                         Commands.CommandName.REGISTRATION.getFullCommand(),
-                        Participants.Step.LETTER.name.toLowerCase()
+                        Participants.Step.LETTER.name.lowercase()
                 ) {
                     // Save new step (the next one) if message has been sent
                     SecretSantaDatabase.transactionDao {
@@ -71,8 +70,8 @@ class RegistrationContent private constructor(
                         "registration_letter_message",
                         participant.secretLetter,
                         Commands.CommandName.REGISTRATION.getFullCommand(),
-                        Participants.Step.FINISH.name.toLowerCase(),
-                        Participants.Step.LETTER.name.toLowerCase()
+                        Participants.Step.FINISH.name.lowercase(),
+                        Participants.Step.LETTER.name.lowercase()
                 ) { /*nothing*/ }
             }
 
