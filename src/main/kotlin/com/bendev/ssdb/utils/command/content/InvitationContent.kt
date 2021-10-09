@@ -5,9 +5,9 @@ import com.bendev.ssdb.database.dao.Participant
 import com.bendev.ssdb.database.table.Participants
 import com.bendev.ssdb.utils.Constant
 import com.bendev.ssdb.utils.MessageSender
-import com.bendev.ssdb.utils.i18n.I18nManager
 import com.bendev.ssdb.utils.command.CommandContent
 import com.bendev.ssdb.utils.command.Commands
+import com.bendev.ssdb.utils.i18n.I18nManager
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
@@ -97,7 +97,7 @@ class InvitationContent private constructor(
                         it,
                         "registration_message_introduction",
                         Commands.CommandName.REGISTRATION.getFullCommand(),
-                        Participants.Step.START.name.toLowerCase()
+                        Participants.Step.START.name.lowercase()
                 ) {
                     SecretSantaDatabase.transactionDao {
                         participant.registrationStep = Participants.Step.NONE
