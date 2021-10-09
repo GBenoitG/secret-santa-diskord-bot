@@ -27,11 +27,8 @@ class InvitationContent private constructor(
             it.first == event.reactionEmote.emoji
         }?.second
 
-        // Auto delete bad reaction from users
-        if (event is MessageReactionAddEvent && reactionType == null) {
-            event.reaction.removeReaction(event.user!!).queue()
-            return
-        }
+        // Auto delete bad reactions from users
+        handleBadReaction(event, reactionType)
 
         when (reactionType) {
             ReactionType.POSITIVE -> {
@@ -112,6 +109,25 @@ class InvitationContent private constructor(
 
     private fun standByAction(event: GenericMessageReactionEvent) {
 
+    }
+
+    private fun handleBadReaction(event: GenericMessageReactionEvent, reactionType: ReactionType?) {
+        if (event is MessageReactionAddEvent) {
+            // remove all bad reaction that is not match with expected ReactionType
+            if (reactionType == null) {
+                event.reaction.removeReaction(event.user!!).queue()
+                return
+            }
+
+            val currentEmote = event.reactionEmote
+            event.retrieveMessage().queue { message ->
+                message.reactions.forEach {
+                    if (it.reactionEmote != currentEmote)
+                        it.removeReaction(event.user!!).queue()
+                }
+
+            }
+        }
     }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
