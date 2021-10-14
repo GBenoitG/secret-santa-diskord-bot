@@ -2,6 +2,7 @@
 
 ## 0.0.2
 
+* Add English translation.
 * Auto delete emoji when users change their choice on the invitation message.
 * Add CI to automate testing.
 
