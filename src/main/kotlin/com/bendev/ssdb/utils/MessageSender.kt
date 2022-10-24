@@ -25,14 +25,14 @@ object MessageSender {
     fun sendError(channel: MessageChannel,
                     key: String,
                     vararg arguments: String,
-                    onSuccess: (Message) -> Unit) {
+                    onSuccess: ((Message) -> Unit)? = null) {
         channel.sendMessage(
                 I18nManager.getErrorString(
                         key,
                         *arguments
                 )
         ).queue {
-            onSuccess.invoke(it)
+            onSuccess?.invoke(it)
         }
     }
 

@@ -80,7 +80,7 @@ class ShuffleContent : CommandContent("") {
 
     private fun sendError(user: User, errorKey: String) {
         user.openPrivateChannel().queue { channel ->
-            MessageSender.sendError(channel, errorKey) { /*nothing*/ }
+            MessageSender.sendError(channel, errorKey)
         }
     }
 
