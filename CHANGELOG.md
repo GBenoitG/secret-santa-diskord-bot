@@ -1,5 +1,9 @@
 # Secret Santa Diskord Bot's
 
+## 0.0.3
+
+* En cours..
+
 ## 0.0.2
 
 * Add English translation.
