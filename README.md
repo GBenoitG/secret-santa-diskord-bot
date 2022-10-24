@@ -43,7 +43,8 @@ There is an automatically generated `properties.json` during the [initialization
     "allowed_users_id_list": [
         "[ANY_MEMBER_ID]"
     ],
-    "language": "[LANGUAGE_TAG]"
+    "language": "[LANGUAGE_TAG]",
+    "role_name": "[ROLE_NAME]"
 }
 ```
 
@@ -54,6 +55,15 @@ There is an automatically generated `properties.json` during the [initialization
 * `allowed_roles_list` contains a list of names of roles that can use the bot.
 * `allowed_users_id_list` same as before, but instead it's all ID from members who can use the bot.
 * `language` select your locale language tag, like: _en-US_, _fr-FR_ (these are currently supported).
+* `role_name` is the name of the role created by the bot to assigns it to members who accept invitation.
+
+### Discord configuration
+This bot need some permission set up from [discord application console](https://discord.com/developers/applications):
+* `Manage Roles`
+* `Send Messages`
+* `Manage Messages`
+* `Mention Everyone`
+* `Add Reactions`
 
 # License
 Based on [GNU GPL v3.0](LICENSE).

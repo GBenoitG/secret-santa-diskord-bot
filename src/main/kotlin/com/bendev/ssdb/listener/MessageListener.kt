@@ -24,7 +24,7 @@ class MessageListener : ListenerAdapter() {
                         it,
                         "error_command_forbidden",
                         commandMessage.commandName.getFullCommand()
-                ) { /*nothing*/ }
+                )
             }
             event.message.delete().queue()
         }

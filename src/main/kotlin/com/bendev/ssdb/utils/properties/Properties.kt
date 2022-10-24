@@ -13,5 +13,7 @@ data class Properties(
         @SerialName("allowed_users_id_list")
         var allowedUsersId: MutableList<String>,
         @SerialName("language")
-        val localeLanguage: String
+        val localeLanguage: String,
+        @SerialName("role_name")
+        val roleName: String
 )

@@ -57,7 +57,8 @@ object PropertiesManager {
                 playingAt = "",
                 allowedRolesName = mutableListOf(""),
                 allowedUsersId = mutableListOf(""),
-                localeLanguage = "Default"
+                localeLanguage = "Default",
+                roleName = "SecretSanta"
         )
 
         val dataToWrite = json.encodeToString(Properties.serializer(), defaultProperties)
