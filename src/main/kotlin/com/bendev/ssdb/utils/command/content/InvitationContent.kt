@@ -8,6 +8,9 @@ import com.bendev.ssdb.utils.MessageSender
 import com.bendev.ssdb.utils.command.CommandContent
 import com.bendev.ssdb.utils.command.Commands
 import com.bendev.ssdb.utils.i18n.I18nManager
+import com.bendev.ssdb.utils.properties.PropertiesManager
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
@@ -43,6 +46,17 @@ class InvitationContent private constructor(
         }
     }
 
+    override fun onMessageReceived(event: MessageReceivedEvent) {
+        super.onMessageReceived(event)
+        reactions.forEach { emoji ->
+            if (emoji.first.isEmpty()) throw Exception("Emote is empty")
+            event.message.addReaction(emoji.first).queue()
+        }
+        event.message.pin().queue()
+        createRole(event.guild)
+
+    }
+
     private fun positiveAction(event: GenericMessageReactionEvent) {
             when (event) {
                 // Add reaction event: create or find user already created before
@@ -55,6 +69,7 @@ class InvitationContent private constructor(
                             nickname = event.user?.name ?: ""
                         }
                     }
+                    addOrRemoveSecretSantaRole(event.member, event.guild, true)
                     sendRegistrationMessage(participant, event)
                 }
 
@@ -85,8 +100,33 @@ class InvitationContent private constructor(
                             )
                         }
                     }
+                    addOrRemoveSecretSantaRole(event.member, event.guild, false)
                 }
             }
+    }
+
+    private fun createRole(guild: Guild) {
+        val roleName = PropertiesManager.properties.roleName
+        if (!guild.roles.any { it.name == roleName }) {
+            guild.createRole()
+                .setName(roleName)
+                .setMentionable(true)
+                .queue()
+        }
+    }
+
+    private fun addOrRemoveSecretSantaRole(member: Member?, guild: Guild, addRole: Boolean) {
+        val roleName = PropertiesManager.properties.roleName
+        val role = guild.roles.firstOrNull { it.name == roleName }
+        member?.let {
+            role?.let {
+                if (addRole) {
+                    guild.addRoleToMember(member, role).queue()
+                } else {
+                    guild.removeRoleFromMember(member, role).queue()
+                }
+            }
+        }
     }
 
     private fun sendRegistrationMessage(participant: Participant, event: GenericMessageReactionEvent) {
@@ -128,15 +168,6 @@ class InvitationContent private constructor(
 
             }
         }
-    }
-
-    override fun onMessageReceived(event: MessageReceivedEvent) {
-        super.onMessageReceived(event)
-        reactions.forEach { emoji ->
-            if (emoji.first.isEmpty()) throw Exception("Emote is empty")
-            event.message.addReaction(emoji.first).queue()
-        }
-        event.message.pin().queue()
     }
 
     enum class ReactionType {
