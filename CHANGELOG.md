@@ -2,7 +2,7 @@
 
 ## 0.0.3
 
-* En cours..
+* Create automatically a secret santa role on server, then handle assigns and unassigns role to members.
 
 ## 0.0.2
 
